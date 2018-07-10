@@ -1,6 +1,8 @@
-FROM alpine:3.7
+FROM resin/armhf-alpine:latest
 
-LABEL maintainer="Adrien Ferrand <ferrand.ad@gmail.com>"
+LABEL maintainer="markusdd"
+
+RUN [ "cross-build-start" ]
 
 ENV BACKUPPC_VERSION 4.2.1
 ENV BACKUPPC_XS_VERSION 0.57
@@ -44,6 +46,8 @@ supervisor rsync samba-client iputils openssh openssl rrdtool msmtp lighttpd lig
 COPY files/lighttpd.conf /etc/lighttpd/lighttpd.conf
 COPY files/entrypoint.sh /entrypoint.sh
 COPY files/supervisord.conf /etc/supervisord.conf
+
+RUN [ "cross-build-end" ]
 
 EXPOSE 8080
 
