@@ -1,5 +1,9 @@
-# &nbsp;![](https://raw.githubusercontent.com/adferrand/docker-backuppc/master/images/logo_200px.png) adferrand/backuppc
-![](https://img.shields.io/badge/tags-4%20latest-lightgrey.svg) [![](https://images.microbadger.com/badges/version/adferrand/backuppc:4.2.1.svg) ![](https://images.microbadger.com/badges/image/adferrand/backuppc:4.2.1.svg)](https://microbadger.com/images/adferrand/backuppc:4.2.1)
+# Credits
+All credit for the content goes to the original version @ https://github.com/adferrand/docker-backuppc
+I have just manipulated the Dockerfile to be buildable for Raspberry Pi for my personal use.
+I have just adapted the image name in the README below.
+
+# &nbsp;![](https://raw.githubusercontent.com/adferrand/docker-backuppc/master/images/logo_200px.png) markusdd/backuppc-rpi
 
 * [Container functionalities](#container-functionalities)
 * [About BackupPC](#about-backuppc)
@@ -46,11 +50,11 @@ For testing purpose, you can create a new BackupPC instance with following comma
 docker run \
     --name backuppc \
     --publish 80:8080 \
-    adferrand/backuppc
+    markusdd/backuppc-rpi
 ```
 
-Latest BackupPC 4.x docker image will be downloaded if needed, and started. 
-After starting, browse http://YOUR_SERVER_IP:8080 to access the BackupPC web Admin UI. 
+Latest BackupPC 4.x docker image will be downloaded if needed, and started.
+After starting, browse http://YOUR_SERVER_IP:8080 to access the BackupPC web Admin UI.
 
 The default credentials are:
 - **username:** backuppc
@@ -79,7 +83,7 @@ docker run \
     --volume /var/docker-data/backuppc/etc:/etc/backuppc \
     --volume /var/docker-data/backuppc/home:/home/backuppc \
     --volume /var/docker-data/backuppc/data:/data/backuppc \
-    adferrand/backuppc
+    markusdd/backuppc-rpi
 ```
 
 All your backuppc configuration, backup and keys will survive the container destroy/re-creation.
@@ -103,12 +107,12 @@ docker run \
     --volume /var/docker-data/backuppc/data:/data/backuppc \
     --env 'BACKUPPC_UUID=1200' \
     --env 'BACKUPPC_GUID=1300' \
-    adferrand/backuppc  
+    markusdd/backuppc-rpi
 ```
 
 ## UI authentication/authorization
 
-By default, a single user with admin rights is created during the first start of the container. Its username is *backuppc* and its password is *password*. The credentials are stored in the file `/etc/backuppc/htpasswd` to allow the embedded lighttpd server to handle Basic Authentication, and the Backuppc config variable `$Conf{CgiAdminUsers}` is setted to this username to instruct BackupPC to give it admin rights. 
+By default, a single user with admin rights is created during the first start of the container. Its username is *backuppc* and its password is *password*. The credentials are stored in the file `/etc/backuppc/htpasswd` to allow the embedded lighttpd server to handle Basic Authentication, and the Backuppc config variable `$Conf{CgiAdminUsers}` is setted to this username to instruct BackupPC to give it admin rights.
 
 You can modify the admin user credentials by setting the environment variables `BACKUPPC_WEB_USER (default backuppc)` and `BACKUPPC_WEB_PASSWD (default password)` when creating the container.
 
@@ -138,7 +142,7 @@ docker run \
     --volume /var/docker-data/backuppc/etc:/etc/backuppc \
     --volume /var/docker-data/backuppc/home:/home/backuppc \
     --volume /var/docker-data/backuppc/data:/data/backuppc \
-    adferrand/backuppc  
+    markusdd/backuppc-rpi
 ```
 
 Please note that Basic Authentication is still done unencrypted on HTTP port. See [UI SSL encryption](#ui-ssl-encryption) to secure the authentication.
@@ -176,7 +180,7 @@ Two configuration approaches are available.
 
 If you are using BackupPC to backup your IT architecture, it is likely that you have already a SMTP server configured on your host or local network. Or you can instantiate a dockerised full-featured SMTP server (like [namshi/smtp](https://github.com/namshi/docker-smtp)) on the same network than the backuppc container.
 
-In both cases, the SMTP server should be accessible to the backuppc container through YOUR_SMTP_FQDN on port 25. Set the environment variable `SMTP_HOST` (default: mail.example.org) to YOUR_SMTP_FQDN before creating the BackupPC container, and all mails emitted by BackupPC will be relayed on this SMTP server. 
+In both cases, the SMTP server should be accessible to the backuppc container through YOUR_SMTP_FQDN on port 25. Set the environment variable `SMTP_HOST` (default: mail.example.org) to YOUR_SMTP_FQDN before creating the BackupPC container, and all mails emitted by BackupPC will be relayed on this SMTP server.
 
 You should also set the _optional_ environment variable `SMTP_MAIL_DOMAIN (default empty)` to the domain you manage, in order to resolve automatically the right part of the email sender to this domain if it is not specified by BackupPC. Indeed by default, sender mail of BackupPC notifications is only 'backuppc', without right part: these emails are likely to be refused by most SMTP servers.
 
@@ -186,7 +190,7 @@ docker run \
     --publish 80:8080 \
     --env SMTP_HOST=smtp.my-domain.org \
     --env SMTP_MAIL_DOMAIN=my-domain.org \
-    adferrand/backuppc
+    markusdd/backuppc-rpi
 ```
 
 ### Advanced SMTP configuration
@@ -199,7 +203,7 @@ See [MSMTP documentation](http://msmtp.sourceforge.net/doc/msmtp.html), in parti
 
 To update the BackupPC version of this container:
 * pull the new image version of this Docker,
-* recreate the container. 
+* recreate the container.
 
 At first start, `configure.pl` script of BackupPC will be called. It will detect your existing configuration (under `/etc/backuppc`), your existing backup pool (under `/data/backuppc`), and will proceed any changes needed to match the new BackupPC version requirement.
 
@@ -227,7 +231,7 @@ docker run \
     --volume /home/backuppc:/home/backuppc \
     --volume /var/lib/backuppc:/data/backuppc \
     --volume /var/log/backuppc:/data/backuppc/log \
-    adferrand/backuppc  
+    markusdd/backuppc-rpi
 ```
 
 The configure.pl script will detect a v3.x version under /etc/backuppc, and will run appropriate upgrade operations (in particular enabling legacy v3.x pool to access it from a BackupPC v4.x).
@@ -244,7 +248,7 @@ docker run \
     --name backuppc \
     --publish 80:8080 \
     --env TZ=Europe/Paris \
-    adferrand/backuppc
+    markusdd/backuppc-rpi
 ```
 
 Alternatively, depending on the host OS, you can sync the container timezone to its host by mounting the host file `/etc/localtime` to the container path `/etc/localtime`.
@@ -254,7 +258,7 @@ docker run \
     --name backuppc \
     --publish 80:8080 \
     --mount /etc/localtime:/etc/localtime:ro \
-    adferrand/backuppc
+    markusdd/backuppc-rpi
 ```
 
 ### Shell access
@@ -275,5 +279,5 @@ Legacy version of BackupPC (v3.x) is available on the legacy tag `3`, or with ex
 docker run \
     --name backuppc \
     --publish 80:8080 \
-    adferrand/backuppc:3
+    markusdd/backuppc-rpi:3
 ```
